@@ -24,7 +24,7 @@ function App() {
       url:
         "https://react-http-f8322-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
     });
-  }, []);
+  }, [fetchTasks]);
 
   const taskAddHandler = (task) => {
     setTasks((prevTasks) => prevTasks.concat(task));
