@@ -6,15 +6,14 @@ import TaskForm from "./TaskForm";
 const NewTask = (props) => {
   const { isLoading, error, sendRequest } = useHttp();
 
-  const createTask = (taskText, taskData) => {
-    console.log("taskText: ", taskText);
-    const generatedId = taskData.name; // firebase-specific => "name" contains generated id
-    const createdTask = { id: generatedId, text: taskText };
-    console.log("createdTask: ", createdTask);
-    props.onAddTask(createdTask);
-  };
-
   const enterTaskHandler = async (taskText) => {
+    const applyData = (data) => {
+      console.log("data: ", data);
+      const generatedId = data.name; // firebase-specific => "name" contains generated id
+      const createdTask = { id: generatedId, text: taskText };
+      console.log("createdTask: ", createdTask);
+      props.onAddTask(createdTask);
+    };
     sendRequest(
       {
         url: "https://react-http-f8322-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
@@ -24,7 +23,7 @@ const NewTask = (props) => {
           "Content-Type": "application/json",
         },
       },
-      createTask.bind(null, taskText)
+      applyData
     );
   };
 
