@@ -4,29 +4,27 @@ import Section from "../UI/Section";
 import TaskForm from "./TaskForm";
 
 const NewTask = (props) => {
-  const createTask = (taskData, taskText) => {
+  const { isLoading, error, sendRequest } = useHttp();
+
+  const createTask = (taskText, taskData) => {
+    console.log("taskText: ", taskText);
     const generatedId = taskData.name; // firebase-specific => "name" contains generated id
     const createdTask = { id: generatedId, text: taskText };
-
+    console.log("createdTask: ", createdTask);
     props.onAddTask(createdTask);
   };
 
-  const { isLoading, error, sendRequest: sendTaskRequest } = useHttp(
-    createTask
-  );
-
   const enterTaskHandler = async (taskText) => {
-    sendTaskRequest(
+    sendRequest(
       {
-        url:
-          "https://react-http-f8322-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
+        url: "https://react-http-f8322-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
         method: "POST",
         body: { text: taskText },
         headers: {
           "Content-Type": "application/json",
         },
       },
-      createTask.bind(taskText, null)
+      createTask.bind(null, taskText)
     );
   };
 

@@ -17,14 +17,16 @@ function App() {
     setTasks(loadedTasks);
   }, []);
 
-  const { isLoading, error, sendRequest: fetchTasks } = useHttp(transformTasks);
+  const { isLoading, error, sendRequest: fetchTasks } = useHttp();
 
   useEffect(() => {
-    fetchTasks({
-      url:
-        "https://react-http-f8322-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
-    });
-  }, [fetchTasks]);
+    fetchTasks(
+      {
+        url: "https://react-http-f8322-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
+      },
+      transformTasks
+    );
+  }, [fetchTasks, transformTasks]);
 
   const taskAddHandler = (task) => {
     setTasks((prevTasks) => prevTasks.concat(task));
