@@ -1,21 +1,31 @@
+// prøvd ut ved commit bd3bcce
+import { useEffect, useState } from "react";
 import useHttp from "../../hooks/use-http";
 
 import Section from "../UI/Section";
 import TaskForm from "./TaskForm";
 
 const NewTask = (props) => {
-  const { isLoading, error, sendRequest } = useHttp();
-
-  const createTask = (taskText, taskData) => {
-    console.log("taskText: ", taskText);
+  const [taskText, setTaskText] = useState();
+  const createTask = (taskData, taskText) => {
     const generatedId = taskData.name; // firebase-specific => "name" contains generated id
     const createdTask = { id: generatedId, text: taskText };
-    console.log("createdTask: ", createdTask);
+    console.log(taskData);
+
     props.onAddTask(createdTask);
   };
 
+  const {
+    isLoading,
+    error,
+    sendRequest: sendTaskRequest,
+  } = useHttp((data) => createTask(data, taskText));
   const enterTaskHandler = async (taskText) => {
-    sendRequest(
+    setTaskText(taskText);
+  };
+
+  useEffect(() => {
+    sendTaskRequest(
       {
         url: "https://react-http-f8322-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
         method: "POST",
@@ -24,9 +34,9 @@ const NewTask = (props) => {
           "Content-Type": "application/json",
         },
       },
-      createTask.bind(null, taskText)
+      createTask.bind(taskText, null)
     );
-  };
+  }, [taskText]);
 
   return (
     <Section>

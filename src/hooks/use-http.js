@@ -1,11 +1,12 @@
+// hentet fra commit bd3bcce
 import { useCallback, useState } from "react";
 
-const useHttp = () => {
+const useHttp = (applyData) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const sendRequest = useCallback(
-    async (requestConfig, applyData) => {
+    async (requestConfig) => {
       setIsLoading(true);
       setError(null);
       try {
@@ -26,7 +27,7 @@ const useHttp = () => {
       }
       setIsLoading(false);
     },
-    []
+    [applyData]
   );
 
   return {
