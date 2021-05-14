@@ -7,7 +7,7 @@ import useHttp from "./hooks/use-http";
 function App() {
   const [tasks, setTasks] = useState([]);
 
-  const transformTasks = useCallback((tasksObject) => {
+  const applyData = useCallback((tasksObject) => {
     const loadedTasks = [];
 
     for (const taskKey in tasksObject) {
@@ -17,16 +17,16 @@ function App() {
     setTasks(loadedTasks);
   }, []);
 
-  const { isLoading, error, sendRequest: fetchTasks } = useHttp();
+  const { isLoading, error, sendRequest } = useHttp();
 
   useEffect(() => {
-    fetchTasks(
+    sendRequest(
       {
         url: "https://react-http-f8322-default-rtdb.europe-west1.firebasedatabase.app/tasks.json",
       },
-      transformTasks
+      applyData
     );
-  }, [fetchTasks, transformTasks]);
+  }, [applyData]);
 
   const taskAddHandler = (task) => {
     setTasks((prevTasks) => prevTasks.concat(task));
@@ -39,7 +39,7 @@ function App() {
         items={tasks}
         loading={isLoading}
         error={error}
-        onFetch={fetchTasks}
+        onFetch={sendRequest}
       />
     </React.Fragment>
   );
